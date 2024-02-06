@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      # 容器初始化时，执行init目录下的mysql脚本
+      #- ./cn/ccj/docker/mysql/init/:/docker-entrypoint-initdb.d/
+      # 挂载配置文件
+      #- ./cn/ccj/docker/mysql/conf:/etc/mysql/conf.d
+      # 挂载日志
+      - ./mysql/logs:/logs
+      # 挂载数据
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - 6378:6378
+    volumes:
+      - '/home/cc/dockersoftware/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf'
+      - '/home/cc/dockersoftware/redis/conf/data:/data'
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+networks:
+  docker_network:
+    driver: bridge
